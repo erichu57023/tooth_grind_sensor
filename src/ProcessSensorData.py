@@ -21,8 +21,8 @@ xs = list(np.linspace(-3, 0, x_len))
 ys = [0] * x_len
 ax1.set_ylim(y_range)
 
-line, = ax1.plot(xs, ys)
-txt = ax1.text(0.05, 0.9, 'Activity profile: ', fontsize = 20, transform = ax1.transAxes)
+line, = ax1.plot(xs, ys, linewidth=4)
+txt = ax1.text(0.05, 0.9, 'Activity profile: ', fontsize = 35, transform = ax1.transAxes)
 plt.margins(x=0)
 
 plt.title('Temporalis Muscle Activity Over Time')
@@ -40,14 +40,14 @@ classes = {
 def calibrate():
     # Identifies minimum and maximum signal strengths for normalization.
     lowBuffer = []
-    print('    Please remain still (2 secs)...')
-    timeout = time.time() + 2
+    print('    Please remain still (5 secs)...')
+    timeout = time.time() + 5
     while time.time() < timeout:
         lowBuffer.append(sensor.readData())
 
     highBuffer = []
-    print('    Please clench hard (2 secs)...')
-    timeout = time.time() + 2
+    print('    Please clench hard (3 secs)...')
+    timeout = time.time() + 3
     while time.time() < timeout:
         highBuffer.append(sensor.readData())
 
@@ -75,16 +75,17 @@ def classifySignal():
     # Classifies activity type based on signal characteristics. Modify if necessary.
     global ys
     recent = ys[-100:]
-    avg = np.nanmean(recent)
-    std = np.nanstd(recent)
+    # avg = np.nanmean(recent)
+    # std = np.nanstd(recent)
     if np.mean(recent[-20]) < 0.1:
         return 0
     elif max(recent[-50:]) > 0.45:
         return 1
-    elif (avg > 0.1 or recent[-1] > 0.1) and std < 0.1:
+    # elif (avg > 0.1 or recent[-1] > 0.1) and std < 0.1:
+    else:  
         return 2
-    else:
-        return 3
+    # else:
+    #     return 3
     
 
 if __name__ == '__main__':
